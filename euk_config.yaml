@@ -1,0 +1,35 @@
+#directory for eukdetect output
+output_dir: "/lustre/project/rumen_longread_metagenome_assembly/tfuller/Sheep_2_HiFi_binning/taxonomy/EukDetect/output"
+
+#Indicate whether reads are paired (true) or single (false)
+paired_end: true
+
+#filename excluding sample name. no need to edit if paired_end = false
+fwd_suffix: "_R1.fastq.gz"
+
+#filename excludign sample name. no need to edit if paired_end = false
+rev_suffix: "_R2.fastq.gz"
+
+#file name excluding sample name. no need to edit if paired_end = true
+se_suffix: ".fastq.gz"
+
+#length of your reads. pre-trimming reads not recommended
+readlen: 150
+
+#full path to directory with raw fastq files
+fq_dir: "/lustre/project/rumen_longread_metagenome_assembly/tfuller/Sheep_2_HiFi_binning"
+
+#full path to folder with eukdetect database files
+database_dir: "/lustre/project/rumen_longread_metagenome_assembly/tfuller/Sheep_2_HiFi_binning/taxonomy/EukDetect/eukdb"
+
+#name of database. Default is original genomes only database name
+database_prefix: "ncbi_eukprot_met_arch_markers.fna"
+
+#full path to eukdetect installation folder
+eukdetect_dir: "/lustre/project/rumen_longread_metagenome_assembly/tfuller/Sheep_2_HiFi_binning/taxonomy/EukDetect"
+
+#list sample names here. fastqs must correspond to {samplename}{se_suffix} for SE reads or {samplename}{fwd_suffix} and {samplename}{rev_suffix} for PE
+#each sample name should be preceded by 2 spaces and followed by a colon character
+samples:
+  LIB101996:
+#  sample2:

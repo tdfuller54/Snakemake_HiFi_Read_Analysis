@@ -1,0 +1,12 @@
+assembly:
+  sheep_sample2: sheep_sample2.fa
+
+samples:
+  LIB101996:
+    - LIB101996_R1.fastq.gz
+    - LIB101996_R2.fastq.gz
+
+threads: 8
+binners:
+  - concoct
+  - metabat2

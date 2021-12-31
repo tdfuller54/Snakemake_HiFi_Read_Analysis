@@ -1,0 +1,9 @@
+__default__:
+  mem: 50000
+  ntasks-per-node: 10
+  nodes: 1
+  qos: msn
+  queue: priority
+
+classify:
+  mem: 250000
