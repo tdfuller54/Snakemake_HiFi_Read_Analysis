@@ -266,7 +266,7 @@ rule checkm_lineage:
         rules.DASTool.output.scaffolds2bin,
         "checkm_data/download.done"
     output:
-        directory("binning/{assembly}/DASTool/output/checkm"),
+        dir=directory("binning/{assembly}/DASTool/output/checkm"),
         "binning/{assembly}/DASTool/output/checkm/lineage.ms"
     log:
         "logs/checkm_lineage_{assembly}.log"
@@ -275,7 +275,7 @@ rule checkm_lineage:
         "envs/checkm.yaml"
     shell:
         """
-        (mkdir {output}
+        (mkdir {output.dir}
         checkm data setRoot {workflow.basedir}/checkm_data
         cd binning/{assembly}/DASTool/output
         checkm lineage_wf -t {threads} -x fa DASTool_results_DASTool_bins checkm) \
