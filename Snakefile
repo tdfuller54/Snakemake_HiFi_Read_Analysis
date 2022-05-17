@@ -251,15 +251,15 @@ rule download_checkm:
     conda:
         "envs/checkm.yaml"
     shell:
-    """
-    (mkdir checkm_data
-    pip3 install pysam
-    pip3 install checkm-genome
-    cd checkm_data
-    wget https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz
-    tar -xzvf checkm_data_2015_01_16.tar.gz
-    rm -r checkm_data_2015_01_16.tar.gz) 2> {log}
-    """
+        """
+        (mkdir checkm_data
+        pip3 install pysam
+        pip3 install checkm-genome
+        cd checkm_data
+        wget https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz
+        tar -xzvf checkm_data_2015_01_16.tar.gz
+        rm -r checkm_data_2015_01_16.tar.gz) 2> {log}
+        """
 
 rule checkm_lineage:
     input:
@@ -273,13 +273,13 @@ rule checkm_lineage:
     conda:
         "envs/checkm.yaml"
     shell:
-    """
-    (mkdir {output}
-    checkm data setRoot {workflow.basedir}/checkm_data
-    cd binning/{assembly}/DASTool/output
-    checkm lineage_wf -t {threads} -x fa DASTool_results_DASTool_bins checkm) \
-    2> {log}
-    """
+        """
+        (mkdir {output}
+        checkm data setRoot {workflow.basedir}/checkm_data
+        cd binning/{assembly}/DASTool/output
+        checkm lineage_wf -t {threads} -x fa DASTool_results_DASTool_bins checkm) \
+        2> {log}
+        """
 
 rule checkm_qa:
     input:
@@ -292,9 +292,9 @@ rule checkm_qa:
     conda:
         "envs/checkm.yaml"
     shell:
-    """
-    (cd binning/{assembly}/DASTool/output
-    checkm qa -t 16 --out_format 1 --tab_table \
-    -f checkm/result.tsv checkm/lineage.ms checkm) \
-    2> {log}
-    """
+        """
+        (cd binning/{assembly}/DASTool/output
+        checkm qa -t 16 --out_format 1 --tab_table \
+        -f checkm/result.tsv checkm/lineage.ms checkm) \
+        2> {log}
+        """
