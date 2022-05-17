@@ -267,7 +267,7 @@ rule checkm_lineage:
         "checkm_data/download.done"
     output:
         dir=directory("binning/{assembly}/DASTool/output/checkm"),
-        "binning/{assembly}/DASTool/output/checkm/lineage.ms",
+        lineage="binning/{assembly}/DASTool/output/checkm/lineage.ms"
     log:
         "logs/checkm_lineage_{assembly}.log"
     threads: 16
