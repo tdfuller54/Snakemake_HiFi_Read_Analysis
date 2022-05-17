@@ -4,7 +4,7 @@
 configfile: "config.yaml"
 
 include: "rules/taxonomy.smk"
-include: "rules/eukdetect.smk"
+#include: "rules/eukdetect.smk"
 
 rule all:
     input:
@@ -19,7 +19,9 @@ rule all:
             assembly=config["assembly"]),
         expand("taxonomy/gtdb/{assembly}_classify.done",
             assembly=config["assembly"]),
-        "taxonomy/EukDetect/finished_eukdetect"
+        expand("binning/{assembly}/DASTool/output/checkm/result.tsv",
+            assembly=config["assembly"]),
+        #"taxonomy/EukDetect/finished_eukdetect"
 
 #Use bwa and samtools to generate and sort BAM files for downstream analysis
 rule bwa_index:
@@ -241,3 +243,58 @@ rule DASTool:
         --write_bins 1 --create_plots 1 --threads {threads} --debug &> {log};
         mv {params.output_prefix}_DASTool_scaffolds2bin.txt {output.scaffolds2bin} &>> {log}
         """
+rule download_checkm:
+    output:
+        touch("checkm_data/download.done")
+    log:
+        "logs/checkm_download.log"
+    conda:
+        "envs/checkm.yaml"
+    shell:
+    """
+    (mkdir checkm_data
+    pip3 install pysam
+    pip3 install checkm-genome
+    cd checkm_data
+    wget https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz
+    tar -xzvf checkm_data_2015_01_16.tar.gz
+    rm -r checkm_data_2015_01_16.tar.gz) 2> {log}
+    """
+
+rule checkm_lineage:
+    input:
+        rules.DASTool.output.scaffolds2bin,
+        "checkm_data/download.done"
+    output:
+        directory("binning/{assembly}/DASTool/output/checkm")
+    log:
+        "logs/checkm_lineage_{assembly}.log"
+    threads: 16
+    conda:
+        "envs/checkm.yaml"
+    shell:
+    """
+    (mkdir {output}
+    checkm data setRoot {workflow.basedir}/checkm_data
+    cd binning/{assembly}/DASTool/output
+    checkm lineage_wf -t {threads} -x fa DASTool_results_DASTool_bins checkm) \
+    2> {log}
+    """
+
+rule checkm_qa:
+    input:
+        "binning/{assembly}/DASTool/output/checkm/lineage.ms"
+    output:
+        "binning/{assembly}/DASTool/output/checkm/result.tsv"
+    log:
+        "logs/checkm_qa_{assembly}.log"
+    threads: 16
+    conda:
+        "envs/checkm.yaml"
+    shell:
+    """
+    (cd binning/{assembly}/DASTool/output
+    checkm qa -t 16 --out_format 1 --tab_table \
+    -f checkm/result.tsv checkm/lineage.ms checkm) \
+    2> {log}
+    """

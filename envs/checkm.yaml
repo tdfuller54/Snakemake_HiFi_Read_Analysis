@@ -1,0 +1,10 @@
+Channels:
+  - Bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - numpy
+  - matplotlib
+  - hmmer
+  - prodigal
+  - pplacer
