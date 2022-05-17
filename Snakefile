@@ -266,7 +266,8 @@ rule checkm_lineage:
         rules.DASTool.output.scaffolds2bin,
         "checkm_data/download.done"
     output:
-        directory("binning/{assembly}/DASTool/output/checkm")
+        directory("binning/{assembly}/DASTool/output/checkm"),
+        "binning/{assembly}/DASTool/output/checkm/lineage.ms"
     log:
         "logs/checkm_lineage_{assembly}.log"
     threads: 16
