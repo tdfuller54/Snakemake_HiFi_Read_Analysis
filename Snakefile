@@ -267,7 +267,8 @@ rule checkm_lineage:
         "checkm_data/download.done"
     output:
         dir=directory("binning/{assembly}/DASTool/output/checkm"),
-        lineage="binning/{assembly}/DASTool/output/checkm/lineage.ms"
+        lineage="binning/{assembly}/DASTool/output/checkm/lineage.ms",
+        result="binning/{assembly}/DASTool/output/checkm/result.tsv"
     log:
         "logs/checkm_lineage_{assembly}.log"
     threads: 16
@@ -278,24 +279,7 @@ rule checkm_lineage:
         (mkdir {output.dir}
         checkm data setRoot {workflow.basedir}/checkm_data
         cd binning/{assembly}/DASTool/output
-        checkm lineage_wf -t {threads} -x fa DASTool_results_DASTool_bins checkm) \
-        2> {log}
-        """
-
-rule checkm_qa:
-    input:
-        "binning/{assembly}/DASTool/output/checkm/lineage.ms"
-    output:
-        "binning/{assembly}/DASTool/output/checkm/result.tsv"
-    log:
-        "logs/checkm_qa_{assembly}.log"
-    threads: 16
-    conda:
-        "envs/checkm.yaml"
-    shell:
-        """
-        (cd binning/{assembly}/DASTool/output
-        checkm qa -t 16 --out_format 1 --tab_table \
-        -f checkm/result.tsv checkm/lineage.ms checkm) \
+        checkm lineage_wf -t {threads} -x fa --tab_table \
+        -f checkm/result.tsv DASTool_results_DASTool_bins checkm) \
         2> {log}
         """
